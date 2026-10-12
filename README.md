@@ -1,31 +1,51 @@
-# DriveSafe-AI 🚗
+# 🚗 DriveSafe-AI
+### Real-Time Driver Drowsiness Detection Using Computer Vision
 
-**Real-Time Driver Drowsiness Detection Using Computer Vision**
+## 📌 About the Project
 
-DriveSafe-AI is a prototype that uses a webcam to detect prolonged eye closure and can trigger an audible alert through an Arduino-connected buzzer.
+DriveSafe-AI is a driver drowsiness detection system developed to identify signs of drowsiness by monitoring the driver's eyes through a webcam. When the system detects prolonged eye closure, it displays a warning on the screen and activates a buzzer connected to an Arduino.
 
-> **Important:** This repository contains a webcam + MediaPipe EAR prototype. It does not currently implement EfficientNet-Lite2, a Temporal Convolutional Network (TCN), yawning detection, GPS, or Raspberry Pi deployment unless you add and test those components yourself.
+The main aim of this project is to demonstrate how computer vision and hardware integration can be used to improve driver awareness and help reduce accidents caused by drowsiness.
 
-## Features
+## ✨ Features
 
-- Real-time webcam capture with OpenCV
-- Facial landmark detection using MediaPipe Face Mesh
-- Eye Aspect Ratio (EAR) calculation
-- Prolonged eye-closure detection
-- On-screen EAR, status, and closure duration
-- Optional Arduino serial communication and buzzer alert
-- Webcam-only mode if the Arduino is unavailable
+- **Real-Time Eye Monitoring:** Captures live video using a webcam.
+- **Facial Landmark Detection:** Uses MediaPipe Face Mesh to identify facial landmarks around the eyes.
+- **Eye Aspect Ratio (EAR):** Calculates the EAR to estimate eye closure.
+- **Drowsiness Detection:** Identifies prolonged eye closure based on a configurable threshold and duration.
+- **Visual Alerts:** Displays the eye aspect ratio and the driver's current status on the screen.
+- **Audible Alerts:** Activates an Arduino-connected buzzer when drowsiness is detected.
+- **Flexible Operation:** Supports webcam-only testing when the Arduino is unavailable.
 
-## Technology Stack
+## 🛠️ Technologies Used
 
-- Python 3.11 (recommended)
+- Python
 - OpenCV
 - MediaPipe Face Mesh
 - NumPy
 - PySerial
-- Arduino IDE / compatible Arduino board
+- Arduino IDE
+- Arduino-compatible board and buzzer
 
-## Repository Structure
+## 🔧 Hardware Requirements
+
+- Laptop or computer with a webcam
+- Arduino-compatible board
+- Active buzzer
+- Jumper wires
+- USB cable
+
+## ⚙️ How It Works
+
+1. The webcam captures live video of the driver.
+2. OpenCV processes the video frames.
+3. MediaPipe Face Mesh detects facial landmarks around the eyes.
+4. The Eye Aspect Ratio (EAR) is calculated using the detected landmarks.
+5. If the EAR remains below the configured threshold for a specified duration, the system identifies a possible drowsiness condition.
+6. A warning is displayed on the screen.
+7. If the Arduino is connected, Python sends a serial command to activate the buzzer.
+
+## 📂 Project Structure
 
 ```text
 DriveSafe-AI/
@@ -33,132 +53,84 @@ DriveSafe-AI/
 ├── arduino/
 │   └── buzzer.ino
 ├── assets/
-│   └── (add your screenshots and project photos here)
+│   └── README.md
 ├── requirements.txt
 ├── TEAM.md
 ├── .gitignore
 └── README.md
 ```
 
-## Hardware Requirements
+## 💻 Installation and Setup
 
-- Computer/laptop with a webcam
-- Arduino-compatible board (optional for webcam-only testing)
-- Active buzzer
-- Jumper wires
-- USB cable
-
-### Example wiring
-
-- Buzzer positive/red wire → Arduino digital pin 8
-- Buzzer negative/black wire → Arduino GND
-
-Check your buzzer's voltage/current requirements and your board's specifications before wiring. If you used a different pin or buzzer type, update the sketch accordingly. Disconnect power before changing wiring.
-
-## Installation and Setup
-
-### 1. Clone the repository
+### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/DriveSafe-AI.git
+git clone https://github.com/keets970/DriveSafe-AI.git
 cd DriveSafe-AI
 ```
 
-Replace `YOUR-USERNAME` with the repository owner's GitHub username.
+### 2. Install Python Dependencies
 
-### 2. Create a Python virtual environment
+Python 3.11 is recommended for this project.
 
-On Windows with Python 3.11 installed:
+Create a virtual environment on Windows:
 
 ```powershell
 py -3.11 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install --upgrade pip
+```
+
+Install the required libraries:
+
+```powershell
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
-If `py -3.11` is not recognized, install Python 3.11 and ensure the Python Launcher is available.
+### 3. Configure the Arduino
 
-### 3. Upload the Arduino sketch
+1. Open `arduino/buzzer.ino` using the Arduino IDE.
+2. Select the appropriate board and COM port.
+3. Upload the program to the Arduino.
+4. Connect the active buzzer to digital pin 8 and GND, following the hardware specifications.
 
-1. Open `arduino/buzzer.ino` in the Arduino IDE.
-2. Select the correct board and port.
-3. Upload the sketch.
-4. Close the Arduino Serial Monitor before starting Python.
+### 4. Configure the Serial Port
 
-The example sketch assumes an **active buzzer** connected to digital pin 8 and GND.
-
-### 4. Set the serial port
-
-Open `webcam.py` and change:
+Open `webcam.py` and check the serial port setting:
 
 ```python
 SERIAL_PORT = "COM3"
 ```
 
-to the Arduino's actual port (for example, `COM4`). Find it in Windows Device Manager under **Ports (COM & LPT)** or in the Arduino IDE.
+Change `COM3` to the port assigned to your Arduino if necessary.
 
-If the Arduino is not connected, the Python program can still run in webcam-only mode.
-
-### 5. Run the application
+### 5. Run the Application
 
 ```powershell
 .\.venv\Scripts\python.exe webcam.py
 ```
 
-A window should display the webcam feed and detection status. Press **q** to quit.
+The webcam window displays the detection status. Press **q** to close the application.
 
-## How It Works
+## 🔍 Applications
 
-1. OpenCV captures frames from the webcam.
-2. MediaPipe Face Mesh estimates facial landmarks.
-3. The program calculates EAR from six landmarks per eye.
-4. When EAR stays below a configurable threshold for a set duration, the program labels the state as drowsy.
-5. Python sends `1` to Arduino to activate the buzzer and `0` to stop it.
+- Driver awareness and drowsiness monitoring prototypes
+- Computer vision learning and experimentation
+- Real-time facial landmark analysis
+- Python and Arduino hardware integration
+- Educational projects related to road safety
 
-## Configuration
+## 🚀 Future Enhancements
 
-At the top of `webcam.py`:
-
-```python
-EAR_THRESHOLD = 0.20
-DROWSY_TIME = 1.5
-SERIAL_PORT = "COM3"
-BAUD_RATE = 9600
-```
-
-These are starting values, not universally valid thresholds. Calibrate and test in the intended lighting and camera position. Eye closure is only a rough indicator and can produce false alarms or miss drowsiness.
-
-## Team Members
-
-See [`TEAM.md`](TEAM.md). Replace the placeholders with the actual names, GitHub usernames, and contributions of all team members.
-
-## Screenshots and Demo
-
-Add screenshots or a short demonstration to the `assets/` folder. Use only media that you have permission to share and avoid uploading identifiable recordings without consent.
-
-Example Markdown after adding a screenshot:
-
-```markdown
-![DriveSafe-AI demo](assets/demo-screenshot.png)
-```
-
-## Limitations and Safety
-
-- This is an educational prototype, not a certified or validated driver-monitoring device.
-- Performance may vary with lighting, camera angle, glasses, occlusion, and individual facial characteristics.
-- It uses prolonged eye closure and does not infer every cause of driver fatigue.
-- Do not rely on this prototype as the sole safety measure while driving.
-
-## Future Enhancements
-
-Only mark these as completed after implementing and testing them:
-
-- Yawning detection using mouth landmarks
-- Temporal classification using a validated dataset
-- Model evaluation and documented performance metrics
-- Raspberry Pi deployment and low-light camera support
+- Yawning detection using facial landmarks
+- Improved drowsiness classification using temporal models
+- Testing with labelled datasets and performance evaluation
+- Raspberry Pi deployment
+- Low-light camera support
 - GPS-based alerting
 
-## License
+## ⚠️ Limitations
 
-Choose a license only after the team agrees on how the project may be reused. If you add a license, include the corresponding `LICENSE` file.
+This project is an educational prototype that uses prolonged eye closure as an indicator of possible drowsiness. Its performance may vary depending on lighting, camera angle, glasses, and other conditions. It is not a certified driver-safety system and should not be used as the sole means of preventing accidents.
+
+## 🎯 Conclusion
+
+DriveSafe-AI demonstrates the practical application of computer vision for detecting prolonged eye closure and generating alerts. By combining Python, MediaPipe, OpenCV, and Arduino, the project provides hands-on experience in real-time image processing and hardware integration while exploring a technology relevant to road safety.
